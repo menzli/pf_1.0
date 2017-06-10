@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<roots>
+    <index>
+        <space>home</space>
+        <controller>Index</controller>
+        <action>index</action>
+    </index>
+    <my>
+        <space>home</space>
+        <controller>My</controller>
+        <action>my</action>
+    </my>
+</roots>

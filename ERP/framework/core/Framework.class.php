@@ -7,6 +7,8 @@ class Framework {
     public static function run() {
         //echo "run()";
         self::init();
+        self::roots();
+        self::path();
         self::autoload();
         self::dispatch();
     }
@@ -31,16 +33,32 @@ class Framework {
         define("LIB_PATH", FRAMEWORK_PATH . "libraries" . DS);
         define("HELPER_PATH", FRAMEWORK_PATH . "helpers" . DS);
         define("UPLOAD_PATH", PUBLIC_PATH . "uploads" . DS);
+    }
 
-        // Define platform, controller, action, for example:
-        // index.php?p=admin&c=Goods&a=add
-        define("PLATFORM", isset($_REQUEST['p']) ? $_REQUEST['p'] : 'home');
-        define("CONTROLLER", isset($_REQUEST['c']) ? $_REQUEST['c'] : 'Index');
-        define("ACTION", isset($_REQUEST['a']) ? $_REQUEST['a'] : 'index');
+    private static function roots() {
+        $rootsVal = file_get_contents(dirname(__FILE__)."/../roots.xml");
+        $xmlRoots = simplexml_load_string($rootsVal, "SimpleXMLElement", LIBXML_NOCDATA);
+        $jsonRoots = json_encode($xmlRoots);
+        $arrayRoots = json_decode($jsonRoots,TRUE);
+        $pages = array_keys($arrayRoots);
 
-        define("CURR_CONTROLLER_PATH", CONTROLLER_PATH . PLATFORM . DS);
-        define("CURR_VIEW_PATH", VIEW_PATH . PLATFORM . DS);
+        foreach ($_REQUEST as $requesUrlKey => $requesUrlVal){
+            if(in_array($requesUrlKey, $pages)){
+                // Define platform, controller, action, for example:
+                // index.php?index
+                define("SPACE", $arrayRoots[$requesUrlKey]["space"]); // home
+                define("CONTROLLER", $arrayRoots[$requesUrlKey]["controller"]); //Index
+                define("ACTION", $arrayRoots[$requesUrlKey]["action"]); //index
+            }else{
+                throw new Exception('page demandé non definie dans notre liste');
+            }
+        }
+    }
 
+    // Initialization
+    private static function path() {
+        define("CURR_CONTROLLER_PATH", CONTROLLER_PATH . SPACE . DS);
+        define("CURR_VIEW_PATH", VIEW_PATH . SPACE . DS);
         // Load configuration file
         require CONFIG_PATH . "config.php";
         // Load core classes
@@ -48,7 +66,6 @@ class Framework {
         require CORE_PATH . "Loader.class.php";
         require DB_PATH . "Mysql.class.php";
         require CORE_PATH . "Model.class.php";
-
         // Start session
         session_start();
     }
@@ -61,13 +78,11 @@ class Framework {
     // Define a custom load method
     private static function load($classname){
         error_log('function load / ' . $classname);
-        // Here simply autoload app’s controller and model classes
         if (substr($classname, -10) == "Controller"){
-            // Controller
-            require_once CURR_CONTROLLER_PATH . "$classname.class.php";
+            include CURR_CONTROLLER_PATH . "$classname.class.php";
         } elseif (substr($classname, -5) == "Model"){
             // Model
-            require_once  MODEL_PATH . "$classname.class.php";
+            include  MODEL_PATH . "$classname.class.php";
         }
     }
 
