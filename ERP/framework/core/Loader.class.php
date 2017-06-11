@@ -8,7 +8,8 @@ class Loader{
 
     // loader helper functions. Naming conversion is xxx_helper.php;
     public function helper($helper){
-        include HELPER_PATH . "{$helper}_helper.php";
+        include HELPER_PATH . "{$helper}_helper.class.php";
+        error_log('ici appel helper');
     }
 
 }

@@ -7,8 +7,11 @@ class Controller{
     protected $loader;
 
     public function __construct(){
-        error_log(' loader pour quoi ?');
         $this->loader = new Loader();
+        $this->loader->library('Mylib');
+        new Mylib();
+        $this->loader->helper('Myhelper');
+        new Myhelper();
     }
 
 }

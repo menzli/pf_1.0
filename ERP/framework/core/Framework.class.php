@@ -110,7 +110,6 @@ class Framework {
         // Instantiate the controller class and call its action method
         $controller_name = CONTROLLER . "Controller";
         $action_name = ACTION . "Action";
-        error_log('okok -- ' . $controller_name);
         $controller = new $controller_name;
         $controller->$action_name();
     }
