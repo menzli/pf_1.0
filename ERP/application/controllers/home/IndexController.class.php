@@ -14,9 +14,7 @@ class IndexController extends Controller{
 
     public function indexAction(){
         $userModel = new UserModel("user");
-        $users = $userModel->getUsers();
-        // Load View template
-        require_once  CURR_VIEW_PATH . "index.php";
+        return  $userModel->getUsers();
     }
 
     public function menuAction(){

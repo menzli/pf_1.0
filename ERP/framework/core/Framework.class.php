@@ -96,7 +96,6 @@ class Framework {
 
     // Define a custom load method
     private static function load($classname){
-        error_log('function load / ' . $classname);
         if (substr($classname, -10) == "Controller"){
             include CURR_CONTROLLER_PATH . "$classname.class.php";
         } elseif (substr($classname, -5) == "Model"){
@@ -108,9 +107,11 @@ class Framework {
     // Routing and dispatching
     private static function dispatch(){
         // Instantiate the controller class and call its action method
+        $render = '';
         $controller_name = CONTROLLER . "Controller";
         $action_name = ACTION . "Action";
         $controller = new $controller_name;
-        $controller->$action_name();
+        $render = $controller->$action_name();
+        require CURR_VIEW_PATH.CONTROLLER .'/'. ACTION. '.php';
     }
 }
