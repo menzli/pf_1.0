@@ -8,6 +8,6 @@ class MyController extends Controller{
         echo 'test' ; die();
     }
     public function myAction(){
-        echo 'test2' ; die();
+        echo 'test2' ;
     }
 }

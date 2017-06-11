@@ -33,25 +33,44 @@ class Framework {
         define("LIB_PATH", FRAMEWORK_PATH . "libraries" . DS);
         define("HELPER_PATH", FRAMEWORK_PATH . "helpers" . DS);
         define("UPLOAD_PATH", PUBLIC_PATH . "uploads" . DS);
+        // Definire Base Url
+        define("BASEURL", $_SERVER['HTTP_HOST'] .'/pf_1.0/ERP/index.php?');
     }
 
     private static function roots() {
+        // Parce XML roots.xml to get chemin
         $rootsVal = file_get_contents(dirname(__FILE__)."/../roots.xml");
         $xmlRoots = simplexml_load_string($rootsVal, "SimpleXMLElement", LIBXML_NOCDATA);
         $jsonRoots = json_encode($xmlRoots);
         $arrayRoots = json_decode($jsonRoots,TRUE);
         $pages = array_keys($arrayRoots);
 
-        foreach ($_REQUEST as $requesUrlKey => $requesUrlVal){
-            if(in_array($requesUrlKey, $pages)){
-                // Define platform, controller, action, for example:
-                // index.php?index
-                define("SPACE", $arrayRoots[$requesUrlKey]["space"]); // home
-                define("CONTROLLER", $arrayRoots[$requesUrlKey]["controller"]); //Index
-                define("ACTION", $arrayRoots[$requesUrlKey]["action"]); //index
-            }else{
-                throw new Exception('page demandé non definie dans notre liste');
-            }
+        // géstion des url à partir des chemin déclaré
+        $first_key = key($_REQUEST);
+        if(in_array($first_key, $pages)){
+            // Define platform, controller, action, for example:
+            // index.php?index
+            define("SPACE", $arrayRoots[$first_key]["space"]); // home
+            define("CONTROLLER", $arrayRoots[$first_key]["controller"]); //Index
+            define("ACTION", $arrayRoots[$first_key]["action"]); //index
+        }elseif(empty($_REQUEST)){
+            // index.php
+            define("SPACE", 'home'); // home
+            define("CONTROLLER", 'Index'); //Index
+            define("ACTION", 'index'); //index
+        }else{
+            throw new Exception('page demande non definie dans notre liste');
+        }
+
+        // Le dexiéme paramétre passé sur url avec le nom data
+        // data : doit étre un json
+        $dataInURL = array_keys($_REQUEST);
+        if(isset($dataInURL[1]) && $dataInURL[1] === 'data' && json_decode($_REQUEST['data']) !== null){
+            define("URLDATA", $_REQUEST['data']); // data passé sur url
+        }elseif(!isset($dataInURL[1])){
+            // rien à faire dans cette condition pas de data sur url
+        }else{
+            throw new Exception('les donné passé sur url ne sont pas avec le format json');
         }
     }
 
