@@ -112,6 +112,7 @@ class Framework {
         $action_name = ACTION . "Action";
         $controller = new $controller_name;
         $render = $controller->$action_name();
+        // chaque action à un view sous le dossire de sont controller
         require CURR_VIEW_PATH.CONTROLLER .'/'. ACTION. '.php';
     }
 }

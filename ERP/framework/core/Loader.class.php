@@ -8,10 +8,12 @@ class Loader{
     }
 
     // loader helper functions. Naming conversion is xxx_helper.php;
-    public function helper($helper, $message = NULL){
+    public function helper($helper, $function = NULL, $message = NULL){
         include HELPER_PATH . "{$helper}_helper.class.php";
         ${$helper} = new $helper();
-        return ${$helper}->displayText($message);
+        if (!is_null($function)){
+            return ${$helper}->{$function}($message);
+        }
     }
 
 }
