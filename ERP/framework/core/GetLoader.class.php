@@ -1,6 +1,7 @@
 <?php
-class Loader{
+class GetLoader{
 
+    public $help;
     // Load library classes
     public function library($lib){
         include LIB_PATH . "$lib.class.php";
@@ -8,12 +9,8 @@ class Loader{
     }
 
     // loader helper functions. Naming conversion is xxx_helper.php;
-    public function helper($helper, $function = NULL, $message = NULL){
+    public function helper($helper){
         include HELPER_PATH . "{$helper}_helper.class.php";
-        ${$helper} = new $helper();
-        if (!is_null($function)){
-            return ${$helper}->{$function}($message);
-        }
     }
 
 }

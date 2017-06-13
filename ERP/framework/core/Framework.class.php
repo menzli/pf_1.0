@@ -81,8 +81,8 @@ class Framework {
         // Load configuration file
         require CONFIG_PATH . "config.php";
         // Load core classes
+        require CORE_PATH . "GetLoader.class.php";
         require CORE_PATH . "Controller.class.php";
-        require CORE_PATH . "Loader.class.php";
         require DB_PATH . "Mysql.class.php";
         require CORE_PATH . "Model.class.php";
         // Start session
@@ -107,7 +107,7 @@ class Framework {
     // Routing and dispatching
     private static function dispatch(){
         // Instantiate the controller class and call its action method
-        $render = '';
+        $rende = '';
         $controller_name = CONTROLLER . "Controller";
         $action_name = ACTION . "Action";
         $controller = new $controller_name;
