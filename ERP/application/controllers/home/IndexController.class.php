@@ -14,6 +14,7 @@ class IndexController extends Controller{
 
     public function indexAction(){
         $userModel = new UserModel("user");
+        //$this->debug('debug');
         return  $userModel->getUsers();
     }
 

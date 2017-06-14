@@ -13,6 +13,7 @@ class Controller extends GetLoader{
         $this->loader->library('Mylib');
         $this->loader->helper('Myhelper'); // Exmple autre helper
         $this->loader->helper('GetInternationalisation'); // declaration helper
+        $this->loader->helper('debug', 'new'); // Exmple autre helper
     }
 
     public function __echoo($message){
@@ -20,4 +21,14 @@ class Controller extends GetLoader{
         return $__echoVal->displayText($message);
     }
 
+    public function debug($message){
+        $__debug = new debug();
+        $tmp_message = '';
+        if(is_array($message)){
+            $tmp_message = json_encode($message);
+        }else{
+            $tmp_message = $message;
+        }
+        $__debug->debug_message($tmp_message);
+    }
 }
